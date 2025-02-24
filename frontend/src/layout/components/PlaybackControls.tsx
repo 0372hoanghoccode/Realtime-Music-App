@@ -1,95 +1,169 @@
-import PlaylistSkeleton from "@/components/skeletons/PlaylistSkeleton";
-import { buttonVariants } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { cn } from "@/lib/utils";
-import { useMusicStore } from "@/stores/useMusicStore";
-import { SignedIn } from "@clerk/clerk-react";
-import { HomeIcon, Library, MessageCircle } from "lucide-react";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { usePlayerStore } from "@/stores/usePlayerStore";
+import { Laptop2, ListMusic, Mic2, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
-const LeftSidebar = () => {
-  const { albums, fetchAlbums, isLoading } = useMusicStore();
+const formatTime = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+};
+
+export const PlaybackControls = () => {
+  const { currentSong, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
+
+  const [volume, setVolume] = useState(75);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    fetchAlbums();
-  }, [fetchAlbums]);
+    audioRef.current = document.querySelector("audio");
 
-  console.log({ albums });
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const updateTime = () => setCurrentTime(audio.currentTime);
+    const updateDuration = () => setDuration(audio.duration);
+
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", updateDuration);
+
+    const handleEnded = () => {
+      usePlayerStore.setState({ isPlaying: false });
+    };
+
+    audio.addEventListener("ended", handleEnded);
+
+    return () => {
+      audio.removeEventListener("timeupdate", updateTime);
+      audio.removeEventListener("loadedmetadata", updateDuration);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [currentSong]);
+
+  const handleSeek = (value: number[]) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = value[0];
+    }
+  };
 
   return (
-    <div className='h-full flex flex-col gap-2'>
-      {/* Navigation menu */}
+    <footer className='h-20 sm:h-24 bg-zinc-900 border-t border-zinc-800 px-4'>
+      <div className='flex justify-between items-center h-full max-w-[1800px] mx-auto'>
+        {/* currently playing song */}
+        <div className='hidden sm:flex items-center gap-4 min-w-[180px] w-[30%]'>
+          {currentSong && (
+            <>
+              <img
+                src={currentSong.imageUrl}
+                alt={currentSong.title}
+                className='w-14 h-14 object-cover rounded-md'
+              />
+              <div className='flex-1 min-w-0'>
+                <div className='font-medium truncate hover:underline cursor-pointer'>
+                  {currentSong.title}
+                </div>
+                <div className='text-sm text-zinc-400 truncate hover:underline cursor-pointer'>
+                  {currentSong.artist}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
 
-      <div className='rounded-lg bg-zinc-900 p-4'>
-        <div className='space-y-2'>
-          <Link
-            to={"/"}
-            className={cn(
-              buttonVariants({
-                variant: "ghost",
-                className: "w-full justify-start text-white hover:bg-zinc-800",
-              })
-            )}
-          >
-            <HomeIcon className='mr-2 size-5' />
-            <span className='hidden md:inline'>Home</span>
-          </Link>
-
-          <SignedIn>
-            <Link
-              to={"/chat"}
-              className={cn(
-                buttonVariants({
-                  variant: "ghost",
-                  className: "w-full justify-start text-white hover:bg-zinc-800",
-                })
-              )}
+        {/* player controls*/}
+        <div className='flex flex-col items-center gap-2 flex-1 max-w-full sm:max-w-[45%]'>
+          <div className='flex items-center gap-4 sm:gap-6'>
+            <Button
+              size='icon'
+              variant='ghost'
+              className='hidden sm:inline-flex hover:text-white text-zinc-400'
             >
-              <MessageCircle className='mr-2 size-5' />
-              <span className='hidden md:inline'>Messages</span>
-            </Link>
-          </SignedIn>
-        </div>
-      </div>
+              <Shuffle className='h-4 w-4' />
+            </Button>
 
-      {/* Library section */}
-      <div className='flex-1 rounded-lg bg-zinc-900 p-4'>
-        <div className='flex items-center justify-between mb-4'>
-          <div className='flex items-center text-white px-2'>
-            <Library className='size-5 mr-2' />
-            <span className='hidden md:inline'>Playlists</span>
+            <Button
+              size='icon'
+              variant='ghost'
+              className='hover:text-white text-zinc-400'
+              onClick={playPrevious}
+              disabled={!currentSong}
+            >
+              <SkipBack className='h-4 w-4' />
+            </Button>
+
+            <Button
+              size='icon'
+              className='bg-white hover:bg-white/80 text-black rounded-full h-8 w-8'
+              onClick={togglePlay}
+              disabled={!currentSong}
+            >
+              {isPlaying ? <Pause className='h-5 w-5' /> : <Play className='h-5 w-5' />}
+            </Button>
+            <Button
+              size='icon'
+              variant='ghost'
+              className='hover:text-white text-zinc-400'
+              onClick={playNext}
+              disabled={!currentSong}
+            >
+              <SkipForward className='h-4 w-4' />
+            </Button>
+            <Button
+              size='icon'
+              variant='ghost'
+              className='hidden sm:inline-flex hover:text-white text-zinc-400'
+            >
+              <Repeat className='h-4 w-4' />
+            </Button>
+          </div>
+
+          <div className='hidden sm:flex items-center gap-2 w-full'>
+            <div className='text-xs text-zinc-400'>{formatTime(currentTime)}</div>
+            <Slider
+              value={[currentTime]}
+              max={duration || 100}
+              step={1}
+              className='w-full hover:cursor-grab active:cursor-grabbing'
+              onValueChange={handleSeek}
+            />
+            <div className='text-xs text-zinc-400'>{formatTime(duration)}</div>
           </div>
         </div>
+        {/* volume controls */}
+        <div className='hidden sm:flex items-center gap-4 min-w-[180px] w-[30%] justify-end'>
+          <Button size='icon' variant='ghost' className='hover:text-white text-zinc-400'>
+            <Mic2 className='h-4 w-4' />
+          </Button>
+          <Button size='icon' variant='ghost' className='hover:text-white text-zinc-400'>
+            <ListMusic className='h-4 w-4' />
+          </Button>
+          <Button size='icon' variant='ghost' className='hover:text-white text-zinc-400'>
+            <Laptop2 className='h-4 w-4' />
+          </Button>
 
-        <ScrollArea className='h-[calc(100vh-300px)]'>
-          <div className='space-y-2'>
-            {isLoading ? (
-              <PlaylistSkeleton />
-            ) : (
-              albums.map((album) => (
-                <Link
-                  to={`/albums/${album._id}`}
-                  key={album._id}
-                  className='p-2 hover:bg-zinc-800 rounded-md flex items-center gap-3 group cursor-pointer'
-                >
-                  <img
-                    src={album.imageUrl}
-                    alt='Playlist img'
-                    className='size-12 rounded-md flex-shrink-0 object-cover'
-                  />
+          <div className='flex items-center gap-2'>
+            <Button size='icon' variant='ghost' className='hover:text-white text-zinc-400'>
+              <Volume1 className='h-4 w-4' />
+            </Button>
 
-                  <div className='flex-1 min-w-0 hidden md:block'>
-                    <p className='font-medium truncate'>{album.title}</p>
-                    <p className='text-sm text-zinc-400 truncate'>Album • {album.artist}</p>
-                  </div>
-                </Link>
-              ))
-            )}
+            <Slider
+              value={[volume]}
+              max={100}
+              step={1}
+              className='w-24 hover:cursor-grab active:cursor-grabbing'
+              onValueChange={(value) => {
+                setVolume(value[0]);
+                if (audioRef.current) {
+                  audioRef.current.volume = value[0] / 100;
+                }
+              }}
+            />
           </div>
-        </ScrollArea>
+        </div>
       </div>
-    </div>
+    </footer>
   );
 };
-export default LeftSidebar;
