@@ -1,5 +1,6 @@
 import { useSignIn } from "@clerk/clerk-react";
 import { Button } from "./ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
 
 const SignInOAuthButtons = () => {
   const { signIn, isLoaded } = useSignIn();
@@ -16,11 +17,53 @@ const SignInOAuthButtons = () => {
     });
   };
 
+  const signInWithGitHub = () => {
+    signIn.authenticateWithRedirect({
+      strategy: "oauth_github",
+      redirectUrl: "/sso-callback",
+      redirectUrlComplete: "/auth-callback",
+    });
+  };
+
   return (
-    <Button onClick={signInWithGoogle} variant={"secondary"} className='w-full text-white border-zinc-200 h-11'>
-      {/* <img src='/google.png' alt='Google' className='size-5' /> */}
-      Continue with Google
-    </Button>
+    <div className="flex gap-2">
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={signInWithGoogle}
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+            >
+              <img src="google.png" alt="Google" className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Continue with Google</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              onClick={signInWithGitHub}
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+            >
+              <img src="github.png" alt="GitHub" className="w-5 h-5" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Continue with GitHub</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
   );
 };
+
 export default SignInOAuthButtons;
