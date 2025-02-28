@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { axiosInstance } from "@/lib/axios";
 import { Plus, Upload } from "lucide-react";
 import { useRef, useState } from "react";
-// import { toast } from "react-hot-toast";
+import { toast } from "sonner";
 
 const AddAlbumDialog = () => {
   const [albumDialogOpen, setAlbumDialogOpen] = useState(false);
@@ -39,7 +39,7 @@ const AddAlbumDialog = () => {
 
     try {
       if (!imageFile) {
-        // return toast.error("Please upload an image");
+        return toast.error("Please upload an image");
       }
 
       const formData = new FormData();
@@ -63,9 +63,9 @@ const AddAlbumDialog = () => {
       });
       setImageFile(null);
       setAlbumDialogOpen(false);
-      // toast.success("Album created successfully");
+      toast.success("Album created successfully");
     } catch (error: any) {
-      // toast.error("Failed to create album: " + error.message);
+      toast.error("Failed to create album: " + error.message);
     } finally {
       setIsLoading(false);
     }

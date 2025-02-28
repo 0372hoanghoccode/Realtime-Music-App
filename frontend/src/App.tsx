@@ -6,10 +6,12 @@ import MainLayout from "./layout/MainLayout";
 import AlbumPage from "./pages/album/AlbumPage";
 import AdminPage from "./pages/admin/AdminPage";
 import ChatPage from "./pages/chat/ChatPage";
+import { Toaster } from "sonner";
 
 function App() {
   return (
     <>
+      <Toaster />
       <Routes>
         <Route
           path='/sso-callback'

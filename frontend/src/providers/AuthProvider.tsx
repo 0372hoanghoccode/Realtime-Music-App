@@ -20,6 +20,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const initAuth = async () => {
       try {
         const token = await getToken();
+        // Log token ra console
+        console.log("Clerk Token:", token);
         updateApiToken(token);
         if (token) {
           await checkAdminStatus();
@@ -49,4 +51,5 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return <>{children}</>;
 };
+
 export default AuthProvider;

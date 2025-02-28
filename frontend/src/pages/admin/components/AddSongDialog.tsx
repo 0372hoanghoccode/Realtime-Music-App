@@ -14,7 +14,7 @@ import { axiosInstance } from "@/lib/axios";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
 import { useRef, useState } from "react";
-// import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 interface NewSong {
   title: string;
@@ -48,7 +48,7 @@ const AddSongDialog = () => {
 
     try {
       if (!files.audio || !files.image) {
-        // return toast.error("Please upload both audio and image files");
+        return toast.error("Please upload both audio and image files");
       }
 
       const formData = new FormData();
@@ -60,12 +60,8 @@ const AddSongDialog = () => {
         formData.append("albumId", newSong.album);
       }
 
-      if (files.audio) {
-        formData.append("audioFile", files.audio);
-      }
-      if (files.image) {
-        formData.append("imageFile", files.image);
-      }
+      formData.append("audioFile", files.audio);
+      formData.append("imageFile", files.image);
 
       await axiosInstance.post("/admin/songs", formData, {
         headers: {
@@ -84,9 +80,9 @@ const AddSongDialog = () => {
         audio: null,
         image: null,
       });
-      // toast.success("Song added successfully");
+      toast.success("Song added successfully");
     } catch (error: any) {
-      // toast.error("Failed to add song: " + error.message);
+      toast.error("Failed to add song: " + error.message);
     } finally {
       setIsLoading(false);
     }
