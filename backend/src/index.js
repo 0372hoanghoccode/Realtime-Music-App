@@ -11,6 +11,9 @@ import songRoutes from './routes/song.route.js';
 import albumRoutes from './routes/album.route.js';
 import statsRoutes from './routes/stat.route.js';
 import userRoutes from './routes/user.route.js';
+import playlistRoutes from './routes/playlist.route.js';
+import likeRoutes from './routes/like.route.js';
+import historyRoutes from './routes/history.route.js';
 import { connectDB } from './lib/db.js';
 import { createServer } from 'http';
 import { initializeSocket } from './lib/socket.js';
@@ -47,6 +50,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/songs", songRoutes);
 app.use("/api/albums", albumRoutes);
 app.use("/api/stats", statsRoutes);
+app.use("/api/playlists", playlistRoutes);
+app.use("/api/likes", likeRoutes);
+app.use("/api/history", historyRoutes);
 
 app.use((err, req, res, next) => {
   res.status(500).json({ message: process.env.NODE_ENV === "production" ? "Internal server error" : err.message });

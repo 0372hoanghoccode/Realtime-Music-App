@@ -50,12 +50,11 @@ export interface User {
   imageUrl: string;
 }
 
-// Thêm các interface mới
 export interface Playlist {
   _id: string;
   name: string;
   description: string;
-  userId: string; // Clerk user ID
+  userId: string; 
   imageUrl: string;
   songs: Song[];
   isPublic: boolean;

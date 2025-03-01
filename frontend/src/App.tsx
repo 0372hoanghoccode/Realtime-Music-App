@@ -4,6 +4,7 @@ import AuthCallbackPage from "./pages/auth/AuthCallbackPage";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import MainLayout from "./layout/MainLayout";
 import AlbumPage from "./pages/album/AlbumPage";
+import PlaylistPage from "./pages/playlist/PlaylistPage";
 import AdminPage from "./pages/admin/AdminPage";
 import ChatPage from "./pages/chat/ChatPage";
 import { Toaster } from "sonner";
@@ -14,16 +15,17 @@ function App() {
       <Toaster />
       <Routes>
         <Route
-          path='/sso-callback'
+          path="/sso-callback"
           element={<AuthenticateWithRedirectCallback signUpForceRedirectUrl={"/auth-callback"} />}
         />
-        <Route path='/auth-callback' element={<AuthCallbackPage />} />
-        <Route path='/admin' element={<AdminPage />} />
+        <Route path="/auth-callback" element={<AuthCallbackPage />} />
+        <Route path="/admin" element={<AdminPage />} />
 
         <Route element={<MainLayout />}>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/chat' element={<ChatPage />} />
-          <Route path='/albums/:albumId' element={<AlbumPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/albums/:albumId" element={<AlbumPage />} />
+          <Route path="/playlists/:playlistId" element={<PlaylistPage />} />
         </Route>
       </Routes>
     </>
