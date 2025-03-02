@@ -2,12 +2,14 @@ import { Song } from "@/types";
 import SectionGridSkeleton from "./SectionGridSkeleton";
 import { Button } from "@/components/ui/button";
 import PlayButton from "./PlayButton";
+import LikeButton from "@/layout/components/LikeButton";
 
 type SectionGridProps = {
   title: string;
   songs: Song[];
   isLoading: boolean;
 };
+
 const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
   if (isLoading) return <SectionGridSkeleton />;
 
@@ -31,18 +33,23 @@ const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
                 <img
                   src={song.imageUrl}
                   alt={song.title}
-                  className='w-full h-full object-cover transition-transform duration-300
-									group-hover:scale-105'
+                  className='w-full h-full object-cover transition-transform duration-300 group-hover:scale-105'
                 />
               </div>
               <PlayButton song={song} />
             </div>
-            <h3 className='font-medium mb-2 truncate'>{song.title}</h3>
-            <p className='text-sm text-zinc-400 truncate'>{song.artist}</p>
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className='font-medium mb-2 truncate'>{song.title}</h3>
+                <p className='text-sm text-zinc-400 truncate'>{song.artist}</p>
+              </div>
+              <LikeButton song={song} />
+            </div>
           </div>
         ))}
       </div>
     </div>
   );
 };
+
 export default SectionGrid;

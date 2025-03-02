@@ -3,12 +3,8 @@ import { Slider } from "@/components/ui/slider";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Laptop2, ListMusic, Mic2, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-const formatTime = (seconds: number) => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-};
+import LikeButton from "./LikeButton";
+import { formatDuration } from "@/lib/format";
 
 export const PlaybackControls = () => {
   const { currentSong, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
@@ -69,6 +65,8 @@ export const PlaybackControls = () => {
                   {currentSong.artist}
                 </div>
               </div>
+              {/* Add Like Button here */}
+              {currentSong && <LikeButton song={currentSong} size="sm" />}
             </>
           )}
         </div>
@@ -121,7 +119,7 @@ export const PlaybackControls = () => {
           </div>
 
           <div className='hidden sm:flex items-center gap-2 w-full'>
-            <div className='text-xs text-zinc-400'>{formatTime(currentTime)}</div>
+            <div className='text-xs text-zinc-400'>{formatDuration(currentTime)}</div>
             <Slider
               value={[currentTime]}
               max={duration || 100}
@@ -129,7 +127,7 @@ export const PlaybackControls = () => {
               className='w-full hover:cursor-grab active:cursor-grabbing'
               onValueChange={handleSeek}
             />
-            <div className='text-xs text-zinc-400'>{formatTime(duration)}</div>
+            <div className='text-xs text-zinc-400'>{formatDuration(duration)}</div>
           </div>
         </div>
         {/* volume controls */}

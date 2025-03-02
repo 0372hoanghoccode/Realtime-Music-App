@@ -7,6 +7,7 @@ import AlbumPage from "./pages/album/AlbumPage";
 import PlaylistPage from "./pages/playlist/PlaylistPage";
 import AdminPage from "./pages/admin/AdminPage";
 import ChatPage from "./pages/chat/ChatPage";
+import LikePage from "./pages/like/LikedSongsPage";
 import { Toaster } from "sonner";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/albums/:albumId" element={<AlbumPage />} />
           <Route path="/playlists/:playlistId" element={<PlaylistPage />} />
+          <Route path="/likes" element={<LikePage />} />
         </Route>
       </Routes>
     </>

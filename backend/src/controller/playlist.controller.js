@@ -14,7 +14,7 @@ export const createPlaylist = async (req, res, next) => {
       });
       imageUrl = result.secure_url;
     } else {
-      imageUrl = "https://res.cloudinary.com/dzjkpikmw/image/upload/sample.jpg";
+      imageUrl = "https://res.cloudinary.com/dzjkpikmw/image/upload/v1734568920/samples/people/jazz.jpg";
     }
 
     const playlist = new Playlist({

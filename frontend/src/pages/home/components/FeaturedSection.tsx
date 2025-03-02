@@ -1,11 +1,12 @@
 import { useMusicStore } from "@/stores/useMusicStore";
 import FeaturedGridSkeleton from "@/components/skeletons/FeaturedGridSkeleton";
 import PlayButton from "./PlayButton";
+import LikeButton from "@/layout/components/LikeButton";
 
 const FeaturedSection = () => {
   const { isLoading, featuredSongs, error } = useMusicStore();
 
-  console.log("Rendering FeaturedSection, songs:", featuredSongs); 
+  console.log("Rendering FeaturedSection, songs:", featuredSongs);
 
   if (isLoading) return <FeaturedGridSkeleton />;
 
@@ -23,7 +24,7 @@ const FeaturedSection = () => {
         <div
           key={song._id}
           className="flex items-center bg-zinc-800/50 rounded-md overflow-hidden
-         hover:bg-zinc-700/50 transition-colors group cursor-pointer relative"
+          hover:bg-zinc-700/50 transition-colors group cursor-pointer relative"
         >
           <img
             src={song.imageUrl}
@@ -34,7 +35,15 @@ const FeaturedSection = () => {
             <p className="font-medium truncate">{song.title}</p>
             <p className="text-sm text-zinc-400 truncate">{song.artist}</p>
           </div>
-          <PlayButton song={song} />
+          <div className="flex items-center mr-4 space-x-2">
+            <LikeButton song={song} size="sm" />
+            <div className="w-8 h-8 flex items-center justify-center">
+              <PlayButton
+                song={song}
+                className="opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+            </div>
+          </div>
         </div>
       ))}
     </div>

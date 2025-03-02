@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { SignedIn } from "@clerk/clerk-react";
-import { HomeIcon, Library, MessageCircle } from "lucide-react";
+import { HomeIcon, Library, MessageCircle, Heart } from "lucide-react"; // Thêm Heart icon
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -20,7 +20,6 @@ const LeftSidebar = () => {
   return (
     <div className='h-full flex flex-col gap-2'>
       {/* Navigation menu */}
-
       <div className='rounded-lg bg-zinc-900 p-4'>
         <div className='space-y-2'>
           <Link
@@ -48,6 +47,20 @@ const LeftSidebar = () => {
             >
               <MessageCircle className='mr-2 size-5' />
               <span className='hidden md:inline'>Messages</span>
+            </Link>
+
+            {/* Thêm phần Liked Songs */}
+            <Link
+              to={"/likes"}
+              className={cn(
+                buttonVariants({
+                  variant: "ghost",
+                  className: "w-full justify-start text-white hover:bg-zinc-800",
+                })
+              )}
+            >
+              <Heart className='mr-2 size-5' />
+              <span className='hidden md:inline'>Liked Songs</span>
             </Link>
           </SignedIn>
         </div>
@@ -92,4 +105,5 @@ const LeftSidebar = () => {
     </div>
   );
 };
+
 export default LeftSidebar;

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
-import { Clock, Play, Trash2 } from "lucide-react"
+import { Play, Trash2 } from "lucide-react"
+import { formatDuration } from "@/lib/format"
 
 interface SongsListProps {
   songs: any[]
@@ -10,25 +11,9 @@ interface SongsListProps {
   onRemoveSong: (songId: string) => void
 }
 
-export function formatDuration(seconds: number) {
-  const minutes = Math.floor(seconds / 60)
-  const remainingSeconds = seconds % 60
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`
-}
-
 export function SongsList({ songs, currentSong, isPlaying, canEdit, onPlaySong, onRemoveSong }: SongsListProps) {
   return (
     <div className="bg-black/30 backdrop-blur-sm rounded-t-xl mx-4 mb-4 border-t border-x border-zinc-800/50">
-      <div className="grid grid-cols-[16px_4fr_2fr_1fr_50px] gap-4 px-6 py-3 text-sm text-zinc-400 border-b border-zinc-800/50">
-        <div className="flex items-center">#</div>
-        <div className="flex items-center">Title</div>
-        <div className="flex items-center">Artist</div>
-        <div className="flex items-center justify-center">
-          <Clock className="h-4 w-4" />
-        </div>
-        <div className="flex items-center justify-center">Actions</div>
-      </div>
-
       <div className="px-2">
         <div className="space-y-1 py-2">
           {songs.map((song, index) => {
@@ -86,4 +71,3 @@ export function SongsList({ songs, currentSong, isPlaying, canEdit, onPlaySong, 
     </div>
   )
 }
-

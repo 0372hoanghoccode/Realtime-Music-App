@@ -4,6 +4,9 @@ import { clerkMiddleware } from "@clerk/express";
 import fileUpload from "express-fileupload";
 import path from "path";
 import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+import compression from "compression";
 
 import adminRoutes from './routes/admin.route.js';
 import authRoutes from './routes/auth.route.js';
@@ -27,6 +30,9 @@ const httpServer = createServer(app);
 initializeSocket(httpServer);
 app.use(express.json());
 app.use(clerkMiddleware());
+app.use(helmet());
+app.use(compression());
+app.use(morgan("dev"));
 
 app.use(cors({
   origin: 'http://localhost:3000',

@@ -8,6 +8,7 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useLikeStore } from "@/stores/useLikeStore";
 
 const HomePage = () => {
   const {
@@ -26,6 +27,7 @@ const HomePage = () => {
   } = useMusicStore();
 
   const { initializeQueue } = usePlayerStore();
+  const { fetchLikedSongs } = useLikeStore();
 
   const [showForm, setShowForm] = useState(false);
   const [playlistName, setPlaylistName] = useState("");
@@ -35,13 +37,15 @@ const HomePage = () => {
     fetchMadeForYouSongs();
     fetchTrendingSongs();
     fetchUserPlaylists();
-    fetchPublicPlaylists(); // Gọi API để lấy playlist công khai
+    fetchPublicPlaylists();
+    fetchLikedSongs();
   }, [
     fetchFeaturedSongs,
     fetchMadeForYouSongs,
     fetchTrendingSongs,
     fetchUserPlaylists,
     fetchPublicPlaylists,
+    fetchLikedSongs,
   ]);
 
   useEffect(() => {

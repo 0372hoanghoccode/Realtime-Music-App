@@ -1,4 +1,5 @@
 export interface Song {
+  id: string;
   _id: string;
   title: string;
   artist: string;
@@ -54,7 +55,7 @@ export interface Playlist {
   _id: string;
   name: string;
   description: string;
-  userId: string; 
+  userId: string;
   imageUrl: string;
   songs: Song[];
   isPublic: boolean;
