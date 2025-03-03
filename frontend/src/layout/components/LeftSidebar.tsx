@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { SignedIn } from "@clerk/clerk-react";
-import { HomeIcon, Library, MessageCircle, Heart } from "lucide-react"; // Thêm Heart icon
+import { HomeIcon, Library, MessageCircle, Heart, History } from "lucide-react";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -14,8 +14,6 @@ const LeftSidebar = () => {
   useEffect(() => {
     fetchAlbums();
   }, [fetchAlbums]);
-
-  console.log({ albums });
 
   return (
     <div className='h-full flex flex-col gap-2'>
@@ -49,7 +47,7 @@ const LeftSidebar = () => {
               <span className='hidden md:inline'>Messages</span>
             </Link>
 
-            {/* Thêm phần Liked Songs */}
+            {/* Liked Songs Link */}
             <Link
               to={"/likes"}
               className={cn(
@@ -61,6 +59,20 @@ const LeftSidebar = () => {
             >
               <Heart className='mr-2 size-5' />
               <span className='hidden md:inline'>Liked Songs</span>
+            </Link>
+
+            {/* History Link */}
+            <Link
+              to={"/history"}
+              className={cn(
+                buttonVariants({
+                  variant: "ghost",
+                  className: "w-full justify-start text-white hover:bg-zinc-800",
+                })
+              )}
+            >
+              <History className='mr-2 size-5' />
+              <span className='hidden md:inline'>History</span>
             </Link>
           </SignedIn>
         </div>

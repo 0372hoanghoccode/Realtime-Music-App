@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { useHistoryStore } from "@/stores/useHistoryStore"; // Import history store
 import { Laptop2, ListMusic, Mic2, Pause, Play, Repeat, Shuffle, SkipBack, SkipForward, Volume1 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import LikeButton from "./LikeButton";
@@ -8,11 +9,13 @@ import { formatDuration } from "@/lib/format";
 
 export const PlaybackControls = () => {
   const { currentSong, isPlaying, togglePlay, playNext, playPrevious } = usePlayerStore();
+  const { addToHistory } = useHistoryStore(); // Get addToHistory function
 
   const [volume, setVolume] = useState(75);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [songStarted, setSongStarted] = useState(false);
 
   useEffect(() => {
     audioRef.current = document.querySelector("audio");
@@ -26,8 +29,19 @@ export const PlaybackControls = () => {
     audio.addEventListener("timeupdate", updateTime);
     audio.addEventListener("loadedmetadata", updateDuration);
 
+    // Add to history when song has played for at least 5 seconds
+    const handlePlaying = () => {
+      if (currentSong && audio.currentTime > 5 && !songStarted) {
+        setSongStarted(true);
+        addToHistory(currentSong._id);
+      }
+    };
+
+    audio.addEventListener("timeupdate", handlePlaying);
+
     const handleEnded = () => {
       usePlayerStore.setState({ isPlaying: false });
+      setSongStarted(false); // Reset for next song
     };
 
     audio.addEventListener("ended", handleEnded);
@@ -35,8 +49,14 @@ export const PlaybackControls = () => {
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
       audio.removeEventListener("loadedmetadata", updateDuration);
+      audio.removeEventListener("timeupdate", handlePlaying);
       audio.removeEventListener("ended", handleEnded);
     };
+  }, [currentSong, addToHistory, songStarted]);
+
+  // Reset songStarted when the current song changes
+  useEffect(() => {
+    setSongStarted(false);
   }, [currentSong]);
 
   const handleSeek = (value: number[]) => {
