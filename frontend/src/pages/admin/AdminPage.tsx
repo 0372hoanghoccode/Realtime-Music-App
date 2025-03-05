@@ -23,10 +23,10 @@ const AdminPage = () => {
 
   if (!isAdmin && !isLoading) return (
     <div className="min-h-screen bg-zinc-900 flex flex-col items-center justify-center text-white">
-      <p className="mb-4">Bạn không có quyền truy cập</p>
+      <p className="mb-4">you are not authorized to view this page</p>
       <Button onClick={() => navigate('/')}>
         <Home className="mr-2 size-4" />
-        Về Trang Chủ
+        back to home
       </Button>
     </div>
   );
