@@ -8,7 +8,8 @@ import PlaylistPage from "./pages/playlist/PlaylistPage";
 import AdminPage from "./pages/admin/AdminPage";
 import ChatPage from "./pages/chat/ChatPage";
 import LikePage from "./pages/like/LikedSongsPage";
-import HistoryPage from "./pages/history/HistoryPage"; 
+import HistoryPage from "./pages/history/HistoryPage";
+import NotFoundPage from "./pages/notfound/NotFoundPage";
 import { Toaster } from "sonner";
 
 function App() {
@@ -30,6 +31,7 @@ function App() {
           <Route path="/playlists/:playlistId" element={<PlaylistPage />} />
           <Route path="/likes" element={<LikePage />} />
           <Route path="/history" element={<HistoryPage />} />
+          <Route path='*' element={<NotFoundPage />} />
         </Route>
       </Routes>
     </>
