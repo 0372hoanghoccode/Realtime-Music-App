@@ -60,8 +60,11 @@ app.use(helmet({
       scriptSrc: ["'self'", "*.clerk.accounts.dev", "'unsafe-inline'"],
       connectSrc: ["'self'", "*.clerk.accounts.dev", "*.clerk.accounts.io"],
       frameSrc: ["'self'", "*.clerk.accounts.dev"],
-      imgSrc: ["'self'", "data:", "*.clerk.accounts.dev"],
-      styleSrc: ["'self'", "'unsafe-inline'"]
+      imgSrc: ["'self'", "data:", "*.clerk.accounts.dev", "*.cloudinary.com", "res.cloudinary.com"],
+      mediaSrc: ["'self'", "*.cloudinary.com", "res.cloudinary.com"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      workerSrc: ["'self'", "blob:"],
+      childSrc: ["'self'", "blob:"]
     }
   }
 }));
