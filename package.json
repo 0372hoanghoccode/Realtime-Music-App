@@ -1,0 +1,14 @@
+{
+  "name": "Realtime-Music-App",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "pnpm install --filter=backend && pnpm install --filter=frontend && pnpm --filter=frontend run build",
+    "start": "pnpm --filter=backend start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.4.1"
+}

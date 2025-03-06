@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
     "seed:songs": "node src/seeds/songs.js",
     "seed:albums": "node src/seeds/albums.js"
   },
@@ -23,6 +24,7 @@
     "helmet": "^8.0.0",
     "mongoose": "^8.10.1",
     "morgan": "^1.10.0",
+    "node-cron": "^3.0.3",
     "nodemon": "^3.1.9",
     "socket.io": "^4.8.1"
   }
