@@ -32,12 +32,13 @@ const httpServer = createServer(app);
 initializeSocket(httpServer);
 app.use(express.json());
 app.use(clerkMiddleware());
-app.use(helmet());
 app.use(compression());
 app.use(morgan("dev"));
 
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production'
+    ? 'https://realtime-music-app-hntg.onrender.com'
+    : 'http://localhost:3000',
   credentials: true
 }));
 
@@ -51,6 +52,19 @@ app.use(
     },
   })
 );
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "*.clerk.accounts.dev", "'unsafe-inline'"],
+      connectSrc: ["'self'", "*.clerk.accounts.dev", "*.clerk.accounts.io"],
+      frameSrc: ["'self'", "*.clerk.accounts.dev"],
+      imgSrc: ["'self'", "data:", "*.clerk.accounts.dev"],
+      styleSrc: ["'self'", "'unsafe-inline'"]
+    }
+  }
+}));
 
 const tempDir = path.join(process.cwd(), "tmp");
 cron.schedule("0 * * * *", () => {
