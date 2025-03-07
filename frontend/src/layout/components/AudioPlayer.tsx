@@ -42,4 +42,5 @@ const AudioPlayer = () => {
 
   return <audio ref={audioRef} />;
 };
+
 export default AudioPlayer;

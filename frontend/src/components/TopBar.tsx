@@ -14,11 +14,7 @@ const Topbar = () => {
       className="flex items-center justify-between p-4 sticky top-0 bg-gradient-to-r from-zinc-900/90 to-zinc-800/90
       backdrop-blur-md z-10 border-b border-zinc-800 shadow-md"
     >
-      <div className='flex gap-2 items-center'>
-        <img src='/spotify.png' className='size-8' alt='Spotify logo' />
-        Spotify
-      </div>
-      <div className='flex items-center gap-4'>
+      <div className='flex items-center gap-4 mx-2'>
         {isAdmin && (
           <Link
             to="/admin"

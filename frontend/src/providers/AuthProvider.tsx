@@ -11,25 +11,32 @@ const updateApiToken = (token: string | null) => {
 };
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { getToken, userId } = useAuth();
+  const { getToken, userId, isSignedIn } = useAuth();
   const [loading, setLoading] = useState(true);
-  const { checkAdminStatus } = useAuthStore();
+  const { checkAdminStatus, checkAuthStatus } = useAuthStore();
   const { initSocket, disconnectSocket } = useChatStore();
 
   useEffect(() => {
     const initAuth = async () => {
       try {
+        await checkAuthStatus();
+
         const token = await getToken();
-        //console Log token ra
         console.log("Clerk Token:", token);
+        console.log("Is signed in:", isSignedIn);
+
         updateApiToken(token);
+
         if (token) {
+          useAuthStore.setState({ isAuthenticated: true });
           await checkAdminStatus();
-          // init socket
           if (userId) initSocket(userId);
+        } else {
+          useAuthStore.setState({ isAuthenticated: false });
         }
       } catch (error: any) {
         updateApiToken(null);
+        useAuthStore.setState({ isAuthenticated: false });
         console.log("Error in auth provider", error);
       } finally {
         setLoading(false);
@@ -40,7 +47,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // clean up
     return () => disconnectSocket();
-  }, [getToken, userId, checkAdminStatus, initSocket, disconnectSocket]);
+  }, [getToken, userId, isSignedIn, checkAdminStatus, checkAuthStatus, initSocket, disconnectSocket]);
 
   if (loading)
     return (
