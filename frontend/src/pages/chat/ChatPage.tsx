@@ -1,12 +1,13 @@
 import Topbar from "@/components/TopBar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChatStore } from "@/stores/useChatStore";
 import { useUser } from "@clerk/clerk-react";
 import { useEffect, useRef } from "react";
-import UsersList from "./components/UsersList";
+import { useParams } from "react-router-dom";
 import ChatHeader from "./components/ChatHeader";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import MessageInput from "./components/MessageInput";
+import UsersList from "./components/UsersList";
 
 const formatTime = (date: string) => {
   return new Date(date).toLocaleTimeString("en-US", {
@@ -18,12 +19,23 @@ const formatTime = (date: string) => {
 
 const ChatPage = () => {
   const { user } = useUser();
-  const { messages, selectedUser, fetchUsers, fetchMessages } = useChatStore();
+  const { userId } = useParams();
+  const { messages, selectedUser, fetchUsers, fetchMessages, users, setSelectedUser } = useChatStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (user) fetchUsers();
   }, [fetchUsers, user]);
+
+  // Handle URL param user ID
+  useEffect(() => {
+    if (userId && users.length > 0) {
+      const userFromParam = users.find(user => user.clerkId === userId);
+      if (userFromParam) {
+        setSelectedUser(userFromParam);
+      }
+    }
+  }, [userId, users, setSelectedUser]);
 
   useEffect(() => {
     if (selectedUser) fetchMessages(selectedUser.clerkId);
