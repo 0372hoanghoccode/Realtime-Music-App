@@ -49,20 +49,17 @@ const PlaylistPage = () => {
         </div>
       </div>
     )
-
   const canEdit = currentPlaylist.userId === userId
-  const isCurrentPlaylist = currentPlaylist.songs.some((song) => song._id === currentSong?._id)
-
+  const isCurrentPlaylist = currentPlaylist?.songs?.some((song) => song._id === currentSong?._id) || false
   const handlePlayPlaylist = () => {
-    if (!currentPlaylist) return
+    if (!currentPlaylist?.songs?.length) return
     if (isCurrentPlaylist) togglePlay()
     else {
       playAlbum(currentPlaylist.songs, 0)
     }
   }
-
   const handlePlaySong = (index: number) => {
-    if (!currentPlaylist) return
+    if (!currentPlaylist?.songs?.length) return
     playAlbum(currentPlaylist.songs, index)
   }
 
@@ -102,17 +99,17 @@ const PlaylistPage = () => {
               onPlay={handlePlayPlaylist}
               onAddSongs={() => setShowAddSong(!showAddSong)}
               onDelete={handleDeletePlaylist}
-            />
-
-            {canEdit && showAddSong && (
-              <AddSongsPanel songs={songs} playlistSongs={currentPlaylist.songs} onAddSong={handleAddSong} />
-            )}
-
-            {currentPlaylist.songs.length === 0 ? (
+            />            {canEdit && showAddSong && (
+              <AddSongsPanel 
+                songs={songs} 
+                playlistSongs={currentPlaylist?.songs || []} 
+                onAddSong={handleAddSong} 
+              />
+            )}            {(currentPlaylist?.songs?.length || 0) === 0 ? (
               <EmptyState canEdit={canEdit} />
             ) : (
               <SongsList
-                songs={currentPlaylist.songs}
+                songs={currentPlaylist?.songs || []}
                 currentSong={currentSong}
                 isPlaying={isPlaying}
                 canEdit={canEdit}

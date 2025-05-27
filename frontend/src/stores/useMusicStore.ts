@@ -235,12 +235,13 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ isLoading: false });
     }
   },
-
   fetchSongs: async () => {
     set({ isLoading: true, error: null });
     try {
       const response = await axiosInstance.get("/songs");
-      set({ songs: response.data });
+      // Backend trả về object có songs array và pagination
+      const songsData = response.data.songs || response.data;
+      set({ songs: Array.isArray(songsData) ? songsData : [] });
     } catch (error: any) {
       if (error.response?.status === 401) {
         console.warn("Authentication required to fetch songs");
@@ -248,6 +249,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
       } else {
         set({ error: error.message });
         console.error("Error fetching songs:", error.message);
+        set({ songs: [] });
       }
     } finally {
       set({ isLoading: false });
