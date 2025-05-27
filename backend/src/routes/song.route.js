@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { getAllSongs, getFeaturedSongs, getMadeForYouSongs, getTrendingSongs } from "../controller/song.controller.js";
-import { protectRoute } from "../middleware/auth.middleware.js";
-import { cacheMiddleware, clearCache } from "../middleware/cache.middleware.js";
+import { cacheMiddleware } from "../middleware/cache.middleware.js";
 
 const router = Router();
 

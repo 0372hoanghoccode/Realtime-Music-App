@@ -1,5 +1,5 @@
 import { axiosInstance } from "@/lib/axios";
-import { Album, Song, Stats, Playlist } from "@/types";
+import { Album, Playlist, Song, Stats } from "@/types";
 import { toast } from "sonner";
 import { create } from "zustand";
 
@@ -76,7 +76,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
     }
   },
 
- createPlaylist: async (name, description = "", isPublic = true) => {
+  createPlaylist: async (name, description = "", isPublic = true) => {
     set({ isLoading: true, error: null });
     try {
       const response = await axiosInstance.post("/playlists", {

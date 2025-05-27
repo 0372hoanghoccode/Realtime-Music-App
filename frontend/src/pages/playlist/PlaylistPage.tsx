@@ -1,16 +1,16 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useMusicStore } from "@/stores/useMusicStore"
 import { usePlayerStore } from "@/stores/usePlayerStore"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
 import { useAuth } from "@clerk/clerk-react"
 import { Music2 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 
-import { LoadingState } from "./components/LoadingState"
-import { EmptyState } from "./components/EmptyState"
-import { PlaylistHeader } from "./components/PlaylistHeader"
-import { PlaylistActions } from "./components/PlaylistActions"
 import { AddSongsPanel } from "./components/AddSongsPanel"
+import { EmptyState } from "./components/EmptyState"
+import { LoadingState } from "./components/LoadingState"
+import { PlaylistActions } from "./components/PlaylistActions"
+import { PlaylistHeader } from "./components/PlaylistHeader"
 import { SongsList } from "./components/SongsList"
 
 const PlaylistPage = () => {
@@ -100,10 +100,10 @@ const PlaylistPage = () => {
               onAddSongs={() => setShowAddSong(!showAddSong)}
               onDelete={handleDeletePlaylist}
             />            {canEdit && showAddSong && (
-              <AddSongsPanel 
-                songs={songs} 
-                playlistSongs={currentPlaylist?.songs || []} 
-                onAddSong={handleAddSong} 
+              <AddSongsPanel
+                songs={songs}
+                playlistSongs={currentPlaylist?.songs || []}
+                onAddSong={handleAddSong}
               />
             )}            {(currentPlaylist?.songs?.length || 0) === 0 ? (
               <EmptyState canEdit={canEdit} />

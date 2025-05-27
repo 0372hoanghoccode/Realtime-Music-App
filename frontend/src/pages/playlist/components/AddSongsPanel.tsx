@@ -13,7 +13,7 @@ export function AddSongsPanel({ songs, playlistSongs, onAddSong }: AddSongsPanel
   // Kiểm tra an toàn để đảm bảo songs và playlistSongs là arrays
   const safeSongs = Array.isArray(songs) ? songs : []
   const safePlaylistSongs = Array.isArray(playlistSongs) ? playlistSongs : []
-  
+
   const availableSongs = safeSongs.filter((song) => !safePlaylistSongs.some((s) => s._id === song._id))
 
   return (
