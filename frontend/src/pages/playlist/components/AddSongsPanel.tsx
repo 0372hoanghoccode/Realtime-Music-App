@@ -1,15 +1,20 @@
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { Song } from "@/types"
 import { Plus } from "lucide-react"
 
 interface AddSongsPanelProps {
-  songs: any[]
-  playlistSongs: any[]
+  songs: Song[] | null | undefined
+  playlistSongs: Song[] | null | undefined
   onAddSong: (songId: string) => void
 }
 
 export function AddSongsPanel({ songs, playlistSongs, onAddSong }: AddSongsPanelProps) {
-  const availableSongs = songs.filter((song) => !playlistSongs.some((s) => s._id === song._id))
+  // Kiểm tra an toàn để đảm bảo songs và playlistSongs là arrays
+  const safeSongs = Array.isArray(songs) ? songs : []
+  const safePlaylistSongs = Array.isArray(playlistSongs) ? playlistSongs : []
+
+  const availableSongs = safeSongs.filter((song) => !safePlaylistSongs.some((s) => s._id === song._id))
 
   return (
     <div className="px-8 pb-6">
@@ -17,10 +22,13 @@ export function AddSongsPanel({ songs, playlistSongs, onAddSong }: AddSongsPanel
         <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
           <Plus className="h-4 w-4 text-green-400" />
           Add Songs to Playlist
-        </h3>
-        <ScrollArea className="max-h-60 rounded-md">
+        </h3>        <ScrollArea className="max-h-60 rounded-md">
           <div className="space-y-1 p-1">
-            {availableSongs.length > 0 ? (
+            {!songs ? (
+              <div className="py-8 text-center text-zinc-500">
+                <p>Loading songs...</p>
+              </div>
+            ) : availableSongs.length > 0 ? (
               availableSongs.map((song) => (
                 <div
                   key={song._id}

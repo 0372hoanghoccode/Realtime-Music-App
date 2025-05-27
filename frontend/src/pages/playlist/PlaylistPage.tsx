@@ -1,16 +1,16 @@
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useMusicStore } from "@/stores/useMusicStore"
 import { usePlayerStore } from "@/stores/usePlayerStore"
-import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
 import { useAuth } from "@clerk/clerk-react"
 import { Music2 } from "lucide-react"
+import { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 
-import { LoadingState } from "./components/LoadingState"
-import { EmptyState } from "./components/EmptyState"
-import { PlaylistHeader } from "./components/PlaylistHeader"
-import { PlaylistActions } from "./components/PlaylistActions"
 import { AddSongsPanel } from "./components/AddSongsPanel"
+import { EmptyState } from "./components/EmptyState"
+import { LoadingState } from "./components/LoadingState"
+import { PlaylistActions } from "./components/PlaylistActions"
+import { PlaylistHeader } from "./components/PlaylistHeader"
 import { SongsList } from "./components/SongsList"
 
 const PlaylistPage = () => {
@@ -49,20 +49,17 @@ const PlaylistPage = () => {
         </div>
       </div>
     )
-
   const canEdit = currentPlaylist.userId === userId
-  const isCurrentPlaylist = currentPlaylist.songs.some((song) => song._id === currentSong?._id)
-
+  const isCurrentPlaylist = currentPlaylist?.songs?.some((song) => song._id === currentSong?._id) || false
   const handlePlayPlaylist = () => {
-    if (!currentPlaylist) return
+    if (!currentPlaylist?.songs?.length) return
     if (isCurrentPlaylist) togglePlay()
     else {
       playAlbum(currentPlaylist.songs, 0)
     }
   }
-
   const handlePlaySong = (index: number) => {
-    if (!currentPlaylist) return
+    if (!currentPlaylist?.songs?.length) return
     playAlbum(currentPlaylist.songs, index)
   }
 
@@ -102,17 +99,17 @@ const PlaylistPage = () => {
               onPlay={handlePlayPlaylist}
               onAddSongs={() => setShowAddSong(!showAddSong)}
               onDelete={handleDeletePlaylist}
-            />
-
-            {canEdit && showAddSong && (
-              <AddSongsPanel songs={songs} playlistSongs={currentPlaylist.songs} onAddSong={handleAddSong} />
-            )}
-
-            {currentPlaylist.songs.length === 0 ? (
+            />            {canEdit && showAddSong && (
+              <AddSongsPanel
+                songs={songs}
+                playlistSongs={currentPlaylist?.songs || []}
+                onAddSong={handleAddSong}
+              />
+            )}            {(currentPlaylist?.songs?.length || 0) === 0 ? (
               <EmptyState canEdit={canEdit} />
             ) : (
               <SongsList
-                songs={currentPlaylist.songs}
+                songs={currentPlaylist?.songs || []}
                 currentSong={currentSong}
                 isPlaying={isPlaying}
                 canEdit={canEdit}
