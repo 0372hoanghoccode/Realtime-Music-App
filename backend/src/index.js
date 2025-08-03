@@ -1,27 +1,27 @@
-import express from 'express';
-import dotenv from 'dotenv';
 import { clerkMiddleware } from "@clerk/express";
-import fileUpload from "express-fileupload";
-import path from "path";
+import compression from "compression";
 import cors from "cors";
+import dotenv from 'dotenv';
+import express from 'express';
+import fileUpload from "express-fileupload";
 import fs from "fs";
-import cron from "node-cron";
 import helmet from "helmet";
 import morgan from "morgan";
-import compression from "compression";
+import cron from "node-cron";
+import path from "path";
 
+import { createServer } from 'http';
+import { connectDB } from './lib/db.js';
+import { initializeSocket } from './lib/socket.js';
 import adminRoutes from './routes/admin.route.js';
-import authRoutes from './routes/auth.route.js';
-import songRoutes from './routes/song.route.js';
 import albumRoutes from './routes/album.route.js';
+import authRoutes from './routes/auth.route.js';
+import historyRoutes from './routes/history.route.js';
+import likeRoutes from './routes/like.route.js';
+import playlistRoutes from './routes/playlist.route.js';
+import songRoutes from './routes/song.route.js';
 import statsRoutes from './routes/stat.route.js';
 import userRoutes from './routes/user.route.js';
-import playlistRoutes from './routes/playlist.route.js';
-import likeRoutes from './routes/like.route.js';
-import historyRoutes from './routes/history.route.js';
-import { connectDB } from './lib/db.js';
-import { createServer } from 'http';
-import { initializeSocket } from './lib/socket.js';
 
 dotenv.config();
 
@@ -85,6 +85,26 @@ cron.schedule("0 * * * *", () => {
 });
 
 
+// Health check endpoints for uptime monitoring
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    service: "Realtime Music App"
+  });
+});
+
+app.head("/health", (req, res) => {
+  res.status(200).end();
+});
+
+// Support HEAD request for root path (for uptime monitoring)
+app.head("/", (req, res) => {
+  res.status(200).end();
+});
+
+// API Routes
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/auth", authRoutes);
