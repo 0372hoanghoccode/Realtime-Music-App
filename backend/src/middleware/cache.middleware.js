@@ -4,8 +4,13 @@ import NodeCache from 'node-cache';
 const cache = new NodeCache({ stdTTL: 300 });
 
 export const cacheMiddleware = (req, res, next) => {
-  // qua cache cho request kp GET
+  // Skip cache cho request không phải GET
   if (req.method !== 'GET') {
+    return next();
+  }
+
+  // Skip cache cho health check endpoints
+  if (req.originalUrl === '/health' || req.originalUrl.startsWith('/health')) {
     return next();
   }
 

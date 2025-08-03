@@ -29,6 +29,26 @@ const __dirname = path.resolve();
 const app = express();
 const PORT = process.env.PORT;
 const httpServer = createServer(app);
+
+// Health check endpoints (MUST BE FIRST - before any middleware)
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "OK",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    service: "Realtime Music App"
+  });
+});
+
+app.head("/health", (req, res) => {
+  res.status(200).end();
+});
+
+// Support HEAD request for root path (for uptime monitoring)
+app.head("/", (req, res) => {
+  res.status(200).end();
+});
+
 initializeSocket(httpServer);
 app.use(express.json());
 app.use(clerkMiddleware());
@@ -84,25 +104,6 @@ cron.schedule("0 * * * *", () => {
   }
 });
 
-
-// Health check endpoints for uptime monitoring
-app.get("/health", (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime(),
-    service: "Realtime Music App"
-  });
-});
-
-app.head("/health", (req, res) => {
-  res.status(200).end();
-});
-
-// Support HEAD request for root path (for uptime monitoring)
-app.head("/", (req, res) => {
-  res.status(200).end();
-});
 
 // API Routes
 app.use("/api/users", userRoutes);
